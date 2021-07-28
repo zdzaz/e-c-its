@@ -1,0 +1,3 @@
+<httpServer>
+	<timeout>900</timeout> <!-- in ms -->
+</httpServer>

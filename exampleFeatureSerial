@@ -1,0 +1,15 @@
+{"source":"192.168.122.173","altitude":0,"consensus_reached":1,"detection_time":1,"h_proposed_id":1,"id":11,"latitude":1,"longitude":2,"phase":1}
+{"source":"192.168.122.173","altitude":0,"consensus_reached":1,"detection_time":1,"h_proposed_id":1,"id":12,"latitude":1,"longitude":33,"phase":1}
+{"source":"192.168.122.173","altitude":0,"consensus_reached":1,"detection_time":1,"h_proposed_id":1,"id":13,"latitude":1,"longitude":2,"phase":1}
+{"source":"192.168.122.173","altitude":0,"consensus_reached":1,"detection_time":1,"h_proposed_id":1,"id":14,"latitude":1,"longitude":2,"phase":1}
+
+!! Copy paste into command line when ./ecits is waiting
+
+
+wget --no-check-certificate --quiet \
+  --method POST \
+  --timeout=0 \
+  --header 'Content-Type: application/json' \
+  --body-data '{}
+' \
+   'http://localhost:1188/request_feature'  
