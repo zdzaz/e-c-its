@@ -36,7 +36,6 @@ void Consensus::init(std::string serialFeature){
     // RECEIVE PROMISES
     string serialMajFeat = receivePromises(feature_id);
     reader.parse(serialMajFeat,majFeature);
-  
 
     // SEND ACCEPT REQUESTS
     try
@@ -148,11 +147,13 @@ string Consensus::receivePromises(int feature_id){
         if(count>0){
             receive_buf[count] = 0;
             printf("\nReply Number %d\nPushing into promises!", mN_replies);
+            promises.push_back(receive_buf);
         }
     }
 
     status=close(sockid);
     printf("Receive Promises Status Socket Close: %d\n",status);
+
 
     return promises_comparison(promises);
 

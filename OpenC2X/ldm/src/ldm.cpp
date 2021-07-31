@@ -542,7 +542,7 @@ dataPackage::LdmData LDM::dccInfoSelect(string condition) {
 		}
 		mDccInfoMutex.unlock();
 	}
-	for (auto entry : dccInfoCache){
+	for (auto entry: dccInfoCache){
 		string serializedDccInfo;
 		entry.second.SerializeToString(&serializedDccInfo);
 		result.add_data(serializedDccInfo);
@@ -871,6 +871,11 @@ void LDM::receiveFromDen() {
 	}
 }
 
+bool checkProposedCoordinates(){
+	// FALSE: SPOOFING ATTACK TESTS vs TRUE BLINDING ATTACK TESTS
+	return false;
+}
+
 void LDM::receiveFromEcits() {
 	string envelope;		
 	string message;
@@ -894,26 +899,43 @@ void LDM::receiveFromEcits() {
 			string proposer_source = jsonMessage["source"].asString();
 
 			if(!existentFeature){
+
 				mLogger->logInfo("Not found in DB. 'Check' the coordinates and reply if found something or not");
+
 				/* 
 					CHECK LOCATION --> Nothing found? 
 					(Spoofing attack on proposer, or this node is being blindeds)
 					Future Work
 				 */
-				mLogger->logInfo("SEND PHASE 2 Empty Feature --> 'Found Nothing'\n");
+				if(checkProposedCoordinates()){
+					// "SEND FOUND FEATURE" - TEST BLINDING ATTACKS
+					// Possibly with the same characteristics as the proposed
+					int sockid = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+					
+					struct sockaddr_in foreignAddr;
+					foreignAddr.sin_family = AF_INET;
+					foreignAddr.sin_port = htons(2100);
+					inet_pton(AF_INET, proposer_source.c_str(), &(foreignAddr.sin_addr));
 
-				int sockid = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+					sendto(sockid, message.c_str(), message.length(),0, (struct sockaddr *) &foreignAddr, sizeof(foreignAddr));
 
-				struct sockaddr_in foreignAddr;
-				foreignAddr.sin_family = AF_INET;
-				foreignAddr.sin_port = htons(2100);
-				inet_pton(AF_INET, proposer_source.c_str(), &(foreignAddr.sin_addr));
+				} else {
+					mLogger->logInfo("SEND PHASE 2 Empty Feature --> 'Found Nothing'\n");
 
-				string none = "{}";
-				const char *empty = none.c_str();
+					int sockid = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-				sendto(sockid,empty, strlen(empty), 0, (struct sockaddr *) &foreignAddr, sizeof(foreignAddr));
-				close(sockid);
+					struct sockaddr_in foreignAddr;
+					foreignAddr.sin_family = AF_INET;
+					foreignAddr.sin_port = htons(2100);
+					inet_pton(AF_INET, proposer_source.c_str(), &(foreignAddr.sin_addr));
+
+					string none = "{}";
+					const char *empty = none.c_str();
+
+					sendto(sockid,empty, strlen(empty), 0, (struct sockaddr *) &foreignAddr, sizeof(foreignAddr));
+					close(sockid);
+				}
+				
 
 			} else {
 				int sockid = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
