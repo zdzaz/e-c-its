@@ -31,7 +31,7 @@ Open a terminal and run the command:
 
     $ sudo apt-get install libzmq3-dev libboost-all-dev protobuf-compiler libprotobuf-dev \
 libgps-dev gpsd gpsd-clients libnl-3-200 libnl-3-dev libnl-genl-3-200 libnl-genl-3-dev sqlite3 \
-libsqlite3-dev tmux asn1c build-essential cmake doxygen
+libsqlite3-dev tmux asn1c build-essential cmake doxygen libjsoncpp-dev
 
 
 
