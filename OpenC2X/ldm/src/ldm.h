@@ -37,7 +37,7 @@
 #include <common/buffers/build/denm.pb.h>
 #include <common/buffers/build/gps.pb.h>
 // ECITS
-#include <common/buffers/build/feature.pb.h>
+// #include <common/buffers/build/feature.pb.h>
 #include <common/buffers/build/obd2.pb.h>
 #include <common/buffers/build/dccInfo.pb.h>
 #include <common/buffers/build/camInfo.pb.h>
